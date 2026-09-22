@@ -1,0 +1,29 @@
+def get_valid_input():
+    quantity = input("Enter stock quantity (or type 'quit' to finish): ")
+
+    if quantity == "quit":
+        return "quit"
+
+    elif not quantity.isdigit():
+        print("Invalid input. Please enter a number.")
+        return None
+
+    return int(quantity)
+
+inventory = 0
+failed_entries = 0
+
+while True:
+    quantity = get_valid_input()
+
+    if quantity == "quit":
+        break
+
+    elif quantity is None:
+        failed_entries += 1
+        continue
+
+    inventory += quantity
+
+print("Total Units Processed:", inventory)
+print("Number of Failed/Rejected Entries:", failed_entries)
