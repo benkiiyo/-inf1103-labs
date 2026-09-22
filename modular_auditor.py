@@ -10,6 +10,9 @@ def get_valid_input():
 
     return int(quantity)
 
+def process_delivery(current_total, new_value):
+    return current_total + new_value
+
 inventory = 0
 failed_entries = 0
 
@@ -23,7 +26,7 @@ while True:
         failed_entries += 1
         continue
 
-    inventory += quantity
+    inventory = process_delivery(inventory, quantity)
 
 print("Total Units Processed:", inventory)
 print("Number of Failed/Rejected Entries:", failed_entries)
