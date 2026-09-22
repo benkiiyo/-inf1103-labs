@@ -22,6 +22,7 @@ def generate_report(total_units, failed_attempts):
 
 inventory = 0
 failed_entries = 0
+deliveries_processed = 0
 
 while True:
     quantity = get_valid_input()
@@ -35,5 +36,10 @@ while True:
 
     inventory = process_delivery(inventory, quantity)
     tax = calculate_tax(quantity)
+    deliveries_processed += 1
+
+    if inventory > 500:
+        print("OVERSTOCK ALERT: Inventory exceeds 500 units.")
+        break
 
 generate_report(inventory, failed_entries)
