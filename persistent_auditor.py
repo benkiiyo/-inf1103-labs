@@ -31,6 +31,7 @@ def generate_report(total_units, failed_attempts):
 inventory = load_inventory()
 failed_entries = 0
 deliveries_processed = 0
+transaction_history = []
 
 while True:
     quantity = get_valid_input()
@@ -43,6 +44,7 @@ while True:
         continue
 
     inventory = process_delivery(inventory, quantity)
+    transaction_history.append(quantity)
     tax = calculate_tax(quantity)
     deliveries_processed += 1
 
