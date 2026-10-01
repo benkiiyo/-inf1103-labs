@@ -1,15 +1,29 @@
 def load_inventory():
     try:
         with open("inventory.txt", "r") as file:
-            inventory = int(file.read())
-            return inventory
+            inventory = int(file.readline())
+
+            transaction_history = []
+
+            for line in file:
+                transaction_history.append(int(line.strip()))
+
+            return inventory, transaction_history
+
     except FileNotFoundError:
-        return 0
+        return 0, []
+
+def save_inventory(inventory, transaction_history):
+    with open("inventory.txt", "w") as file:
+        file.write(str(inventory) + "\n")
+
+        for transaction in transaction_history:
+            file.write(str(transaction) + "\n")
 
 def get_valid_input():
-    quantity = input("Enter stock quantity (or type 'quit' to finish): ")
+    product_name = input("Enter Product Name (or type 'quit' to finish): ")
 
-    if quantity == "quit":
+    if product_name == "quit":
         return "quit"
 
     elif not quantity.isdigit():
@@ -28,15 +42,15 @@ def generate_report(total_units, failed_attempts):
     print("Total Deliveries Processed:", total_units)
     print("Number of Failed/Rejected Entries:", failed_attempts)
 
-inventory = load_inventory()
+inventory, transaction_history = load_inventory()
 failed_entries = 0
 deliveries_processed = 0
-transaction_history = []
 
 while True:
     quantity = get_valid_input()
 
     if quantity == "quit":
+        save_inventory(inventory, transaction_history)
         break
 
     elif quantity is None:
