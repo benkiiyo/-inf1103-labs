@@ -71,27 +71,39 @@ def generate_report(total_transactions, total_units, failed_attempts):
 
 inventory, orders = load_inventory()
 display_orders(orders)
+
 failed_entries = 0
-deliveries_processed = 0
+transactions = 0
+units_processed = 0
 
 while True:
-    quantity = get_valid_input()
+    result = get_valid_input()
 
-    if quantity == "quit":
-        save_inventory(inventory, transaction_history)
+    if result == "quit":
         break
 
-    elif quantity is None:
+    if result is None:
         failed_entries += 1
+        print()
         continue
 
+    product_name, quantity = result
+    order_id = FIRST_ORDER_ID + len(orders)
+    orders.append((order_id, product_name, quantity))
     inventory = process_delivery(inventory, quantity)
-    transaction_history.append(quantity)
     tax = calculate_tax(quantity)
-    deliveries_processed += 1
+    transactions += 1
+    units_processed += quantity
 
-    if inventory > 500:
+    print()
+    print("New Order Added:")
+    print(f"{order_id}, {product_name}, {quantity}")
+    print(f"Tax: ${tax:.2f} | Total Inventory: {inventory}")
+    print()
+
+    if inventory > OVERSTOCK_LIMIT:
         print("OVERSTOCK ALERT: Inventory exceeds 500 units.")
         break
 
-generate_report(deliveries_processed, failed_entries)
+print()
+generate_report(transactions, units_processed, failed_entries)
