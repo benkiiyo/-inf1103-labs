@@ -40,16 +40,22 @@ def save_inventory(inventory, transaction_history):
             file.write(str(transaction) + "\n")
 
 def get_valid_input():
-    product_name = input("Enter Product Name (or type 'quit' to finish): ")
+    product_name = input("Enter Product Name (or 'quit' to exit): ").strip()
 
-    if product_name == "quit":
+    if product_name.lower() == "quit":
         return "quit"
 
-    elif not quantity.isdigit():
-        print("Invalid input. Please enter a number.")
+    if product_name == "" or "," in product_name:
+        print("Invalid product name.")
         return None
 
-    return int(quantity)
+    quantity = input("Enter Quantity: ").strip()
+
+    if not quantity.isdigit() or int(quantity) <= 0:
+        print("Invalid input. Please enter a positive whole number.")
+        return None
+
+    return product_name, int(quantity)
 
 def process_delivery(current_total, new_value):
     return current_total + new_value
@@ -61,7 +67,8 @@ def generate_report(total_units, failed_attempts):
     print("Total Deliveries Processed:", total_units)
     print("Number of Failed/Rejected Entries:", failed_attempts)
 
-inventory, transaction_history = load_inventory()
+inventory, orders = load_inventory()
+display_orders(orders)
 failed_entries = 0
 deliveries_processed = 0
 
