@@ -1,17 +1,36 @@
+FILENAME = "inventory.txt"
+FIRST_ORDER_ID = 1001
+OVERSTOCK_LIMIT = 500
+
 def load_inventory():
     try:
-        with open("inventory.txt", "r") as file:
-            inventory = int(file.readline())
-
-            transaction_history = []
-
-            for line in file:
-                transaction_history.append(int(line.strip()))
-
-            return inventory, transaction_history
-
+        with open(FILENAME, "r") as file:
+            lines = [line.strip() for line in file if line.strip()]
     except FileNotFoundError:
         return 0, []
+
+    if not lines:
+        return 0, []
+
+    try:
+        inventory = int(lines[0])
+        orders = []
+        for line in lines[1:]:
+            order_id, name, quantity = [part.strip() for part in line.split(",")]
+            orders.append((int(order_id), name, int(quantity)))
+        return inventory, orders
+    except ValueError:
+        print("Warning: inventory.txt is corrupted. Starting with an empty inventory.")
+        return 0, []
+
+def display_orders(orders):
+    print("Current Orders:")
+    if not orders:
+        print("  (No previous orders found)")
+    else:
+        for order_id, name, quantity in orders:
+            print(f"{order_id}, {name}, {quantity}")
+    print("-" * 33)
 
 def save_inventory(inventory, transaction_history):
     with open("inventory.txt", "w") as file:
