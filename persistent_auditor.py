@@ -32,12 +32,11 @@ def display_orders(orders):
             print(f"{order_id}, {name}, {quantity}")
     print("-" * 33)
 
-def save_inventory(inventory, transaction_history):
-    with open("inventory.txt", "w") as file:
+def save_inventory(inventory, orders):
+    with open(FILENAME, "w") as file:
         file.write(str(inventory) + "\n")
-
-        for transaction in transaction_history:
-            file.write(str(transaction) + "\n")
+        for order_id, name, quantity in orders:
+            file.write(f"{order_id}, {name}, {quantity}\n")
 
 def get_valid_input():
     product_name = input("Enter Product Name (or 'quit' to exit): ").strip()
@@ -105,5 +104,7 @@ while True:
         print("OVERSTOCK ALERT: Inventory exceeds 500 units.")
         break
 
+save_inventory(inventory, orders)
+print("Order successfully saved to inventory.txt")
 print()
 generate_report(transactions, units_processed, failed_entries)
