@@ -4,16 +4,12 @@ from supplier import Supplier
 
 class Product(ABC):
 
-   
     def __init__(self, product_id: str, name: str, price: float, stock: int,
                  supplier: Supplier) -> None:
-        # Double underscore (__) = private: outside code uses the methods below
         self.__product_id: str = product_id
         self.__name: str = name
-        self.__price: float = float(price)   # price is a decimal number
-        self.__stock: int = int(stock)       # stock is a whole number
-        # ASSOCIATION: we store a reference to a Supplier object that was
-        # created somewhere else. The Product doesn't create or own it.
+        self.__price: float = float(price)
+        self.__stock: int = int(stock)
         self.__supplier: Supplier = supplier
 
     # Getter: return the product ID
@@ -36,7 +32,6 @@ class Product(ABC):
     def get_supplier(self) -> Supplier:
         return self.__supplier
 
-    # Change the stock - the Product checks the value first (encapsulation)
     # Returns True if it worked, False if it was refused
     def update_stock(self, quantity: int) -> bool:
         if quantity < 0:
@@ -46,23 +41,26 @@ class Product(ABC):
         return True        # update worked
 
     # Print the details EVERY product has
-    # The child classes add their own extra details on top of this (overriding)
     def display_information(self) -> None:
         print(f"ID: {self.__product_id} | Name: {self.__name} | "
               f"Price: ${self.__price:.2f} | Stock: {self.__stock} | "
               f"Supplier: {self.__supplier.get_name()}")
 
     # Turn the common details into a dictionary, ready to save to JSON
-    # The child classes add their type and extra attribute on top of this
     def to_dict(self) -> dict:
         return {
             "id": self.__product_id,
             "name": self.__name,
             "price": self.__price,
-            "stock": self.__stock
+            "stock": self.__stock,
+            # Save the supplier's details too, so it can be rebuilt when loading
+            "supplier": {
+                "id": self.__supplier.get_supplier_id(),
+                "name": self.__supplier.get_name(),
+                "email": self.__supplier.get_contact_email()
+            }
         }
 
-    # Every child class MUST write its own version.
     @abstractmethod
     def get_fulfilment_info(self) -> str:
         pass
