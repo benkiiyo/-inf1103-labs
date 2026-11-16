@@ -1,12 +1,14 @@
 from product import Product   # the parent class
+from supplier import Supplier   # needed for the supplier type hint
 
 
 class DigitalProduct(Product):
 
     # Create a digital product: all the normal product details + download size
-    def __init__(self, product_id, name, price, stock, download_size):
+    def __init__(self, product_id: str, name: str, price: float, stock: int,
+                 supplier: Supplier, download_size: float) -> None:
         # Reuse Product's __init__ for ID/name/price/stock
-        super().__init__(product_id, name, price, stock)
+        super().__init__(product_id, name, price, stock, supplier)
         self.__download_size = float(download_size)   # the extra attribute, in MB
 
     # Getter: return the download size

@@ -1,4 +1,5 @@
 from product import Product                 # the parent class
+from supplier import Supplier               # needed for the supplier type hint
 from can_be_shipped import CanBeShipped     # the interface
 
 
@@ -8,8 +9,9 @@ class PhysicalProduct(Product, CanBeShipped):
     COST_PER_KG = 2.00         # plus $2 for every kilogram
 
     # Create a physical product: all the normal product details + weight
-    def __init__(self, product_id, name, price, stock, weight):
-        super().__init__(product_id, name, price, stock)
+    def __init__(self, product_id: str, name: str, price: float, stock: int,
+                 supplier: Supplier, weight: float) -> None:
+        super().__init__(product_id, name, price, stock, supplier)
         self.__weight = float(weight)   # the extra attribute, in kilograms
 
     # Getter: return the weight
